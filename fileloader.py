@@ -53,7 +53,7 @@ class DiceTest(ShowBase):
         self.world.attach(self.ground_node)
 
         #Die Setup
-        visNP = loader.loadModel("models/cube/die.gltf")
+        visNP = loader.loadModel("models/cube/die2.gltf")
         
         mesh = BulletTriangleMesh()
 
