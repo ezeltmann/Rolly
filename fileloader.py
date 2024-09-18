@@ -5,13 +5,6 @@ import sys
 import direct.directbase.DirectStart
 
 from direct.showbase.ShowBase import ShowBase
-from direct.showbase.AppRunnerGlobal import appRunner
-from direct.showbase.DirectObject import DirectObject
-from direct.interval.MetaInterval import Sequence
-from direct.interval.MetaInterval import Parallel
-from direct.interval.LerpInterval import LerpFunc
-from direct.interval.FunctionInterval import Func
-from direct.interval.FunctionInterval import Wait
 
 from panda3d.core import WindowProperties
 from panda3d.core import load_prc_file
