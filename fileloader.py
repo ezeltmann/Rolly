@@ -106,8 +106,7 @@ class DiceTest(ShowBase):
     def startRun(self):
         if (self.checkRigidBody('Die')):
             self.world.remove(self.die_node)
-        die_node = self.die_node
-        die_pos = self.die_np.getPos()
+        
         self.die_np.setPos(0, 0, 15)
         self.die_node.setMass(1.0)
         rand_x = random.randrange(-10,10)
