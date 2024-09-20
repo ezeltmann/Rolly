@@ -20,12 +20,14 @@ from direct.showbase.ShowBaseGlobal import globalClock
 
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
+from panda3d.core import BitMask32
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletDebugNode
 
 
 import simplepbr
@@ -39,23 +41,61 @@ class DiceTest:
     def __init__(self):
         self.base = ShowBase()
         self.base.disable_mouse()
-        self.base.camera.setPos(0, -40, 30)
+        self.base.camera.setPos(0, -50, 40)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
         simplepbr.init()
 
+        self.setup_debug(False)
+
         # World Setup
         self.world = BulletWorld()
         self.world.setGravity(Vec3(0, 0, -9.81))
+        self.world.setDebugNode(self.debug_np.node())
         self.worldNP = self.base.render.attachNewNode("World")
 
         # Plane Setup
         shape = BulletPlaneShape(Vec3(0, 0, 1), 1)
         self.ground_node = BulletRigidBodyNode("Ground")
         self.ground_node.addShape(shape)
+        self.ground_node.setCollisionResponse(True)
         self.ground_np = self.base.render.attachNewNode(self.ground_node)
         self.ground_np.setPos(0, 0, -2)
         self.world.attach(self.ground_node)
+
+        shape = BulletPlaneShape(Vec3(25,0,0), 1)
+        self.r_wall_node = BulletRigidBodyNode("Right_Wall")
+        self.r_wall_node.addShape(shape)
+        self.r_wall_node.setCollisionResponse(True)        
+        self.r_wall_np = self.base.render.attachNewNode(self.r_wall_node)
+        self.r_wall_np.setCollideMask(BitMask32.allOn())
+        self.r_wall_np.setPos(20, 0, -2)
+        self.world.attach(self.r_wall_node)
+
+        shape = BulletPlaneShape(Vec3(25,0,0), 1)
+        self.l_wall_node = BulletRigidBodyNode("Left_Wall")
+        self.l_wall_node.addShape(shape)
+        self.l_wall_node.setCollisionResponse(True)
+        self.l_wall_np = self.base.render.attachNewNode(self.l_wall_node)
+        self.l_wall_np.setPos(-20, 0, -2)
+        self.world.attach(self.l_wall_node)
+
+        shape = BulletPlaneShape(Vec3(0,25,0), 1)
+        self.u_wall_node = BulletRigidBodyNode("Up_Wall")
+        self.u_wall_node.addShape(shape)
+        self.u_wall_node.setCollisionResponse(True)
+        self.u_wall_np = self.base.render.attachNewNode(self.u_wall_node)
+        self.u_wall_np.setPos(0, 20, -2)
+        self.world.attach(self.u_wall_node)
+
+        shape = BulletPlaneShape(Vec3(0,25,0), 1)
+        self.d_wall_node = BulletRigidBodyNode("Down_Wall")
+        self.d_wall_node.addShape(shape)
+        self.d_wall_node.setCollisionResponse(True)
+        self.d_wall_np = self.base.render.attachNewNode(self.d_wall_node)
+        self.d_wall_np.setPos(0, -20, -2)
+        self.world.attach(self.d_wall_node)
+
 
         # Die Setup
         visNP = self.base.loader.loadModel("models/dice/d6.gltf")
@@ -86,6 +126,15 @@ class DiceTest:
 
         # Startup
         self.startRun()
+
+    def setup_debug(self, debug_level: bool):
+        self.debug_node = BulletDebugNode('Debug')
+        self.debug_node.showWireframe(debug_level)
+        self.debug_node.showConstraints(debug_level)
+        self.debug_node.showBoundingBoxes(debug_level)
+        self.debug_node.showNormals(debug_level)
+        self.debug_np = self.base.render.attachNewNode(self.debug_node)
+        self.debug_np.show()
 
     def checkRigidBody(self, name):
         body_list = self.world.getRigidBodies()
