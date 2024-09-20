@@ -55,50 +55,8 @@ class DiceTest:
         self.worldNP = self.base.render.attachNewNode("World")
 
         # Plane Setup
-        shape = BulletPlaneShape(Vec3(0, 0, 1), 1)
-        self.ground_node = BulletRigidBodyNode("Ground")
-        self.ground_node.addShape(shape)
-        self.ground_node.setCollisionResponse(True)
-        self.ground_np = self.base.render.attachNewNode(self.ground_node)
-        self.ground_np.setPos(0, 0, -2)
-        self.world.attach(self.ground_node)
-
-        shape = BulletPlaneShape(Vec3(-25,0,0), 1)
-        self.r_wall_node = BulletRigidBodyNode("Right_Wall")
-        self.r_wall_node.addShape(shape)
-        self.r_wall_node.setCollisionResponse(True)        
-        self.r_wall_np = self.base.render.attachNewNode(self.r_wall_node)
-        self.r_wall_np.setCollideMask(BitMask32.allOn())
-        self.r_wall_np.setPos(20, 0, -2)
-        self.world.attach(self.r_wall_node)
-
-        shape = BulletPlaneShape(Vec3(25,0,0), 1)
-        self.l_wall_node = BulletRigidBodyNode("Left_Wall")
-        self.l_wall_node.addShape(shape)
-        self.l_wall_node.setCollisionResponse(True)
-        self.l_wall_np = self.base.render.attachNewNode(self.l_wall_node)
-        self.l_wall_np.setCollideMask(BitMask32.allOn())
-        self.l_wall_np.setPos(-20, 0, -2)
-        self.world.attach(self.l_wall_node)
-
-        shape = BulletPlaneShape(Vec3(0,-25,0), 1)
-        self.u_wall_node = BulletRigidBodyNode("Up_Wall")
-        self.u_wall_node.addShape(shape)
-        self.u_wall_node.setCollisionResponse(True)
-        self.u_wall_np = self.base.render.attachNewNode(self.u_wall_node)
-        self.u_wall_np.setCollideMask(BitMask32.allOn())
-        self.u_wall_np.setPos(0, 20, -2)
-        self.world.attach(self.u_wall_node)
-
-        shape = BulletPlaneShape(Vec3(0,25,0), 1)
-        self.d_wall_node = BulletRigidBodyNode("Down_Wall")
-        self.d_wall_node.addShape(shape)
-        self.d_wall_node.setCollisionResponse(True)
-        self.d_wall_np = self.base.render.attachNewNode(self.d_wall_node)
-        self.d_wall_np.setCollideMask(BitMask32.allOn())
-        self.d_wall_np.setPos(0, -20, -2)
-        self.world.attach(self.d_wall_node)
-
+        self.wall_setup()
+        
 
         # Die Setup
         visNP = self.base.loader.loadModel("models/dice/d6.gltf")
@@ -170,6 +128,23 @@ class DiceTest:
         dt = globalClock.getDt()
         self.world.do_physics(dt)
         return task.cont
+
+    def make_wall(self, shape_vector : Vec3, name, x, y, z):
+        shape = BulletPlaneShape(shape_vector, 1)
+        node = BulletRigidBodyNode(name)
+        node.addShape(shape)
+        node.setCollisionResponse(True)
+        node_path = self.base.render.attachNewNode(node)
+        node_path.setCollideMask(BitMask32.allOn())
+        node_path.setPos(x, y, z)
+        return node
+
+    def wall_setup(self):
+        self.world.attach(self.make_wall(Vec3(0,0,1),"Ground",0,0,-2))
+        self.world.attach(self.make_wall(Vec3(-25,0,0),"Right Wall", 20, 0, -2))
+        self.world.attach(self.make_wall(Vec3(25,0,0),"Left Wall", -20, 0, -2))
+        self.world.attach(self.make_wall(Vec3(0,-25,0),"Up Wall", 0, 20, -2))
+        self.world.attach(self.make_wall(Vec3(0,25,0),"Down Wall", 0, -20, -2))
 
     def exitGame(self):
         self.stopRun()
