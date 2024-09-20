@@ -38,6 +38,7 @@ class DiceTest:
 
     def __init__(self):
         self.base = ShowBase()
+        self.base.disable_mouse()
         self.base.camera.setPos(0, -40, 30)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
