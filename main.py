@@ -63,7 +63,7 @@ class DiceTest:
         self.ground_np.setPos(0, 0, -2)
         self.world.attach(self.ground_node)
 
-        shape = BulletPlaneShape(Vec3(25,0,0), 1)
+        shape = BulletPlaneShape(Vec3(-25,0,0), 1)
         self.r_wall_node = BulletRigidBodyNode("Right_Wall")
         self.r_wall_node.addShape(shape)
         self.r_wall_node.setCollisionResponse(True)        
@@ -81,7 +81,7 @@ class DiceTest:
         self.l_wall_np.setPos(-20, 0, -2)
         self.world.attach(self.l_wall_node)
 
-        shape = BulletPlaneShape(Vec3(0,25,0), 1)
+        shape = BulletPlaneShape(Vec3(0,-25,0), 1)
         self.u_wall_node = BulletRigidBodyNode("Up_Wall")
         self.u_wall_node.addShape(shape)
         self.u_wall_node.setCollisionResponse(True)
