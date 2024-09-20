@@ -77,6 +77,7 @@ class DiceTest:
         self.l_wall_node.addShape(shape)
         self.l_wall_node.setCollisionResponse(True)
         self.l_wall_np = self.base.render.attachNewNode(self.l_wall_node)
+        self.l_wall_np.setCollideMask(BitMask32.allOn())
         self.l_wall_np.setPos(-20, 0, -2)
         self.world.attach(self.l_wall_node)
 
@@ -85,6 +86,7 @@ class DiceTest:
         self.u_wall_node.addShape(shape)
         self.u_wall_node.setCollisionResponse(True)
         self.u_wall_np = self.base.render.attachNewNode(self.u_wall_node)
+        self.u_wall_np.setCollideMask(BitMask32.allOn())
         self.u_wall_np.setPos(0, 20, -2)
         self.world.attach(self.u_wall_node)
 
@@ -93,6 +95,7 @@ class DiceTest:
         self.d_wall_node.addShape(shape)
         self.d_wall_node.setCollisionResponse(True)
         self.d_wall_np = self.base.render.attachNewNode(self.d_wall_node)
+        self.d_wall_np.setCollideMask(BitMask32.allOn())
         self.d_wall_np.setPos(0, -20, -2)
         self.world.attach(self.d_wall_node)
 
@@ -115,8 +118,9 @@ class DiceTest:
         # self.die.reparentTo(render)
         self.die_node.setMass(1.0)
         self.die_np = self.base.render.attachNewNode(self.die_node)
+        self.die_np.setCollideMask(BitMask32.bit(0))
         self.die_node.setDeactivationEnabled(False)
-        self.die_node.set_collision_response(True)
+        self.die_node.setCollisionResponse(True)
         visNP.reparentTo(self.die_np)
 
         # Input
