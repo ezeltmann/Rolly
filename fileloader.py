@@ -1,5 +1,17 @@
 # Filename: fileloader.py
 
+"""
+TODO:
+1. Split up methods into smaller calls
+    A. __init__
+    B.startrun()
+
+2. Start adding multiple dice
+3. Start adding a board for rolling
+4. Start adding an inverface for calling methods
+5. Split classes into multiple files
+"""
+
 import random
 import sys
 
