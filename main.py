@@ -32,8 +32,6 @@ from panda3d.bullet import BulletDebugNode
 
 import simplepbr
 
-load_prc_file("myConfig.prc")
-
 
 class DiceTest:
     """Class Representing The Dice Checker"""
@@ -151,5 +149,6 @@ class DiceTest:
         sys.exit()
 
 
+load_prc_file("myConfig.prc")
 app = DiceTest()
 app.base.run()
