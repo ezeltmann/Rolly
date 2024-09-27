@@ -14,6 +14,7 @@ TODO:
 
 import random
 import sys
+from D6 import D6
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
@@ -25,8 +26,6 @@ from panda3d.core import BitMask32
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletRigidBodyNode
-from panda3d.bullet import BulletTriangleMesh
-from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.bullet import BulletPlaneShape
 from panda3d.bullet import BulletDebugNode
 
@@ -58,27 +57,10 @@ class DiceTest:
         
 
         # Die Setup
-        visNP = self.base.loader.loadModel("models/dice/d6.gltf")
-
-        mesh = BulletTriangleMesh()
-
-        for node_path in visNP.find_all_matches("**/+GeomNode"):
-            for i in range(node_path.node().get_num_geoms()):
-                geom = node_path.node().get_geom(i)
-                mesh.add_geom(geom)
-
-        shape = BulletTriangleMeshShape(mesh, True)
-
-        visNP.clearModelNodes()
-        self.die_node = BulletRigidBodyNode("Die")
-        self.die_node.addShape(shape)
-        # self.die.reparentTo(render)
-        self.die_node.setMass(1.0)
-        self.die_np = self.base.render.attachNewNode(self.die_node)
-        self.die_np.setCollideMask(BitMask32.bit(0))        
-        self.die_node.setDeactivationEnabled(False)
-        self.die_node.setCollisionResponse(True)
-        visNP.reparentTo(self.die_np)
+        die = D6("models/dice/d6.gltf")
+        (die_node, die_np) = die.die_setup(self.base.render, self.base.loader)
+        self.die_node = die_node
+        self.die_np = die_np
 
         # Input
         self.base.accept("escape", self.exitGame)
