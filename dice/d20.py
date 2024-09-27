@@ -6,7 +6,7 @@ from panda3d.core import BitMask32
 
 import die
 
-class D6(die):
+class D20(die):
     def __init__(self, path):
         self.set_file(path)
 
