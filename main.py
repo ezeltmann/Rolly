@@ -14,7 +14,8 @@ TODO:
 
 import random
 import sys
-from D6 import D6
+from Dice.D6 import D6
+from Dice.D20 import D20
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock

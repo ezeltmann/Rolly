@@ -1,4 +1,4 @@
-from Die import Die
+from Dice.Die import Die
 
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletTriangleMesh
@@ -7,7 +7,7 @@ from panda3d.core import BitMask32
 
 
 
-class D6(Die):
+class D20(Die):
     def __init__(self, path):
         self.set_file(path)
 
