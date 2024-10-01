@@ -58,10 +58,13 @@ class DiceTest:
         
 
         # Die Setup
-        die = D6("models/dice/d6.gltf")
-        (die_node, die_np) = die.die_setup(self.base.render, self.base.loader)
-        self.die_node = die_node
-        self.die_np = die_np
+        self.die_nodes = []
+        self.die_nps = []
+        for i in range(4):
+            die = D6("models/dice/d6.gltf")
+            (die_node, die_np) = die.die_setup(self.base.render, self.base.loader)
+            self.die_nodes.append(die_node)
+            self.die_nps.append(die_np)
 
         # Input
         self.base.accept("escape", self.exitGame)
