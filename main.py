@@ -43,6 +43,7 @@ class DiceTest:
         self.base.camera.setPos(0, -50, 40)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
+        self.text = None
         simplepbr.init()
 
         self.setup_debug(False)
@@ -60,7 +61,7 @@ class DiceTest:
         # Die Setup
         self.die_nodes = []
         self.die_nps = []
-        for i in range(4):
+        for _i in range(20):
             die = D6("models/dice/d6.gltf")
             (die_node, die_np) = die.die_setup(self.base.render, self.base.loader)
             self.die_nodes.append(die_node)
@@ -89,25 +90,39 @@ class DiceTest:
         return any((body.name == name) for body in body_list)
 
     def stopRun(self):
-        self.world.remove(self.die_node)
+        for node in self.die_nodes:
+            self.world.remove(node)
         self.base.taskMgr.remove("updateRun")
 
+    def randomize_die(self):
+        for die_np in self.die_nps:
+            rand_x = random.randrange(-10, 10)
+            rand_y = random.randrange(-10, 10)
+            rand_z = random.randrange(10,20)
+            die_np.setPos(rand_x, rand_y, rand_z)
+        
+        for die_node in self.die_nodes:
+            die_node.setMass(1.0)
+            rand_x = random.randrange(-10, 10)
+            rand_y = random.randrange(-10, 10)
+            rand_ax = random.randrange(-10, 10)
+            rand_ay = random.randrange(-10, 10)
+            rand_az = random.randrange(-10, 10)
+            die_node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
+            die_node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
+
+
     def startRun(self):
-
-        if self.checkRigidBody("Die"):
+        for die_node in self.die_nodes:
+            #if self.checkRigidBody(die_node.Name):
             self.clear_text()
-            self.world.remove(self.die_node)
-        self.die_np.setPos(0, 0, 15)
-        self.die_node.setMass(1.0)
-        rand_x = random.randrange(-10, 10)
-        rand_y = random.randrange(-10, 10)
+            self.world.remove(die_node)
 
-        rand_ax = random.randrange(-10, 10)
-        rand_ay = random.randrange(-10, 10)
-        rand_az = random.randrange(-10, 10)
-        self.die_node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
-        self.die_node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
-        self.world.attach(self.die_node)
+        self.randomize_die()
+
+        for die_node in self.die_nodes:
+            self.world.attach(die_node)
+
         if self.base.taskMgr.hasTaskNamed("updateRun"):
             self.base.taskMgr.remove("updateRun")
         self.base.taskMgr.add(self.updateRun, "updateRun")
@@ -116,32 +131,35 @@ class DiceTest:
         dt = globalClock.getDt()
         self.world.do_physics(dt)
         #Check if the die has gone still       
-        if (self.still_dice()):
+        dice_still = True
+        for die_node in self.die_nodes:
+            dice_still = self.still_dice(die_node) and dice_still
+        if (dice_still):
             self.base.taskMgr.remove("updateRun")
             self.display_face_up()
         return task.cont
 
     def display_face_up(self):
-        face_value = self.up_face()
-        self.text = OnscreenText(text=f"Face Value: {face_value}", pos=(-0.5,0.02),scale=0.07)
+        face_value = sum(self.up_face(die_np) for die_np in self.die_nps)
+        self.text = OnscreenText(text=f"Total Value: {face_value}", pos=(-0.5,0.02),scale=0.07)
 
-    def still_dice(self):
-        temp_die = self.die_node
-        ang = temp_die.getAngularVelocity()
-        lin = temp_die.getLinearVelocity()
-        comp_1 = ang.compareTo(Vec3(0,0,0),0.01)
-        comp_2 = lin.compareTo(Vec3(0,0,0),0.01)
+    def still_dice(self, die_node):
+        ang = die_node.getAngularVelocity()
+        lin = die_node.getLinearVelocity()
+        comp_1 = ang.compareTo(Vec3(0,0,0),0.05)
+        comp_2 = lin.compareTo(Vec3(0,0,0),0.05)
         if comp_1 != 0 or comp_2 != 0:
             return False
-        self.die_node.setAngularVelocity(Vec3(0,0,0))
-        self.die_node.setLinearVelocity(Vec3(0,0,0))
+        die_node.setAngularVelocity(Vec3(0,0,0))
+        die_node.setLinearVelocity(Vec3(0,0,0))
         return True
 
     def clear_text(self):
-        self.text.destroy()
+        if self.text is not None:
+            self.text.destroy()
         
 
-    def up_face(self):        
+    def up_face(self, die_np):        
         faces = {1:(Vec3(0,0,1),Vec3(0,0,1)), 
                  6:(Vec3(0,0,-1),Vec3(0,0,1)),
                  2:(Vec3(0,0,-1),Vec3(1,0,0)),
@@ -152,7 +170,7 @@ class DiceTest:
         high = 0
         face = 0
         for x, y in faces.items():
-            face_vector = self.worldNP.get_relative_vector(self.die_np, y[1])
+            face_vector = self.worldNP.get_relative_vector(die_np, y[1])
             value = y[0].dot(face_vector)
             if (value > high):
                 high = value
