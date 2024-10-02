@@ -7,25 +7,25 @@ from panda3d.core import BitMask32
 
 
 
+
 class D6(Die):
     def __init__(self, path):
-        self.set_file(path)
+        self.file_path = path
 
     def die_setup(self, render, loader):
         (shape, visNP) = self.setup_model(loader)
-        die_node = BulletRigidBodyNode("Die")
-        die_node.addShape(shape)
-        die_node.setMass(1.0)
-        die_np = render.attachNewNode(die_node)
-        die_np.setCollideMask(BitMask32.bit(0))
-        die_node.setDeactivationEnabled(False)
-        die_node.setCollisionResponse(True)
-        visNP.reparentTo(die_np)
-        return (die_node, die_np)
+        self._node = BulletRigidBodyNode("Die")
+        self._node.addShape(shape)
+        self._node.setMass(1.0)
+        self._np = render.attachNewNode(self._node)
+        self._np.setCollideMask(BitMask32.bit(0))
+        self._node.setDeactivationEnabled(False)
+        self._node.setCollisionResponse(True)
+        visNP.reparentTo(self._np)
 
 
     def setup_model(self, loader):
-        visNP = loader.loadModel(self.get_file())
+        visNP = loader.loadModel(self.file_path)
         mesh = BulletTriangleMesh()
 
         for node_path in visNP.find_all_matches("**/+GeomNode"):
@@ -36,4 +36,4 @@ class D6(Die):
         shape = BulletTriangleMeshShape(mesh, True)
         visNP.clearModelNodes()
 
-        return (shape, visNP)
+        return (shape, visNP)    

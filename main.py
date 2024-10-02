@@ -15,7 +15,6 @@ TODO:
 import random
 import sys
 from Dice.D6 import D6
-from Dice.D20 import D20
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
@@ -59,13 +58,11 @@ class DiceTest:
         
 
         # Die Setup
-        self.die_nodes = []
-        self.die_nps = []
+        self.dice = []
         for _i in range(20):
             die = D6("models/dice/d6.gltf")
-            (die_node, die_np) = die.die_setup(self.base.render, self.base.loader)
-            self.die_nodes.append(die_node)
-            self.die_nps.append(die_np)
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
 
         # Input
         self.base.accept("escape", self.exitGame)
@@ -94,34 +91,36 @@ class DiceTest:
             self.world.remove(node)
         self.base.taskMgr.remove("updateRun")
 
-    def randomize_die(self):
-        for die_np in self.die_nps:
+    def randomize_die_location(self):
+        for die in self.dice:
             rand_x = random.randrange(-10, 10)
             rand_y = random.randrange(-10, 10)
             rand_z = random.randrange(10,20)
-            die_np.setPos(rand_x, rand_y, rand_z)
-        
-        for die_node in self.die_nodes:
-            die_node.setMass(1.0)
+            die.np.setPos(rand_x, rand_y, rand_z)
+    
+    def randomize_die_movement(self):    
+        for die in self.dice:
+            die.node.setMass(1.0)
             rand_x = random.randrange(-10, 10)
             rand_y = random.randrange(-10, 10)
             rand_ax = random.randrange(-10, 10)
             rand_ay = random.randrange(-10, 10)
             rand_az = random.randrange(-10, 10)
-            die_node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
-            die_node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
+            die.node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
+            die.node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
 
 
     def startRun(self):
-        for die_node in self.die_nodes:
+        for die in self.dice:
             #if self.checkRigidBody(die_node.Name):
             self.clear_text()
-            self.world.remove(die_node)
+            self.world.remove(die.node)
 
-        self.randomize_die()
+        self.randomize_die_location()
+        self.randomize_die_movement()
 
-        for die_node in self.die_nodes:
-            self.world.attach(die_node)
+        for die in self.dice:
+            self.world.attach(die.node)
 
         if self.base.taskMgr.hasTaskNamed("updateRun"):
             self.base.taskMgr.remove("updateRun")
@@ -132,15 +131,15 @@ class DiceTest:
         self.world.do_physics(dt)
         #Check if the die has gone still       
         dice_still = True
-        for die_node in self.die_nodes:
-            dice_still = self.still_dice(die_node) and dice_still
+        for die in self.dice:
+            dice_still = self.still_dice(die.node) and dice_still
         if (dice_still):
             self.base.taskMgr.remove("updateRun")
             self.display_face_up()
         return task.cont
 
     def display_face_up(self):
-        face_value = sum(self.up_face(die_np) for die_np in self.die_nps)
+        face_value = sum(self.up_face(die.np) for die in self.dice)
         self.text = OnscreenText(text=f"Total Value: {face_value}", pos=(-0.5,0.02),scale=0.07)
 
     def still_dice(self, die_node):
