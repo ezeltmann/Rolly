@@ -19,6 +19,7 @@ from Dice.D6 import D6
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.gui.OnscreenText import OnscreenText
+from direct.gui.DirectGui import DirectSlider
 
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
@@ -42,6 +43,7 @@ class DiceTest:
         self.base.camera.setPos(0, -50, 40)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
+        self.slider = DirectSlider(range=(0,20), value=10, pageSize=2, command=self.showValue, pos = (0.5, 0, 0))
         self.text = None
         simplepbr.init()
 
@@ -198,7 +200,13 @@ class DiceTest:
         self.stopRun()
         sys.exit()
 
+    def showValue(self):
+        print(self.slider['value'])
+
+
 
 load_prc_file("myConfig.prc")
+
+
 app = DiceTest()
 app.base.run()
