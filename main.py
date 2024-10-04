@@ -14,12 +14,15 @@ TODO:
 
 import random
 import sys
+from math import floor
 from Dice.D6 import D6
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.DirectGui import DirectSlider
+from direct.gui.DirectGui import DirectLabel
+from direct.gui.DirectGui import DirectButton
 
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
@@ -43,8 +46,18 @@ class DiceTest:
         self.base.camera.setPos(0, -50, 40)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
-        self.slider = DirectSlider(range=(0,20), value=10, pageSize=2, command=self.showValue, pos = (0.5, 0, 0))
+        self.slider = DirectSlider(range=(0,20), value=10, 
+                pageSize=1, command=self.showValue, 
+                pos = (-1.4, 0, 0), scale=0.25,
+                frameColor=(255,255,255,255))
+        self.label = DirectLabel(text="10", 
+                pos = (-1.7, 0, 0), scale=0.25,
+                text_scale=0.25)
+        self.button = DirectButton(text="Roll!", command=self.roll_dice,
+                pos = (-1.5, 0, -0.2), scale=0.25,
+                text_scale=0.25)
         self.text = None
+        self.dice = []
         simplepbr.init()
 
         self.setup_debug(False)
@@ -60,11 +73,7 @@ class DiceTest:
         
 
         # Die Setup
-        self.dice = []
-        for _i in range(20):
-            die = D6("models/dice/d6.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
+
 
         # Input
         self.base.accept("escape", self.exitGame)
@@ -73,6 +82,19 @@ class DiceTest:
         self.base.accept("f3", self.clear_text)
 
         # Startup
+        #self.startRun()
+
+    def roll_dice(self):
+        if (len(self.dice) > 0):
+            for die in self.dice:
+                self.world.remove(die.node)
+                die.np.removeNode()
+        self.clear_text()
+        self.dice = []
+        for _i in range(int(floor(self.slider['value']))):
+            die = D6("models/dice/d6.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
         self.startRun()
 
     def setup_debug(self, debug_level: bool):
@@ -113,11 +135,6 @@ class DiceTest:
 
 
     def startRun(self):
-        for die in self.dice:
-            #if self.checkRigidBody(die_node.Name):
-            self.clear_text()
-            self.world.remove(die.node)
-
         self.randomize_die_location()
         self.randomize_die_movement()
 
@@ -201,6 +218,7 @@ class DiceTest:
         sys.exit()
 
     def showValue(self):
+        self.label['text'] = str(int(floor(self.slider['value'])))
         print(self.slider['value'])
 
 
