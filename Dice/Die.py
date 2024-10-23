@@ -1,8 +1,9 @@
 class Die():
-    def __init__ (self, path = None, node = None, np = None):
+    def __init__ (self, path = None, node = None, np = None, face_dict = None):
         self._path = path
         self._node = node
         self._np = np
+        self._face_dict = face_dict
 
     @property
     def file_path(self):
@@ -28,5 +29,13 @@ class Die():
     def np(self, new_np):
         self._np = new_np
 
-    def get_face_value(self):
+    @property
+    def face_dict(self):
+        return self._face_dict
+    
+    @face_dict.setter
+    def face_dict(self, new_face_dict):
+        self._face_dict = new_face_dict
+
+    def get_face_value(self, world_np):
         pass

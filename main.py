@@ -92,7 +92,7 @@ class DiceTest:
         self.clear_text()
         self.dice = []
         for _i in range(int(floor(self.slider['value']))):
-            die = D6("models/dice/d6.gltf")
+            die = D6("models/dice/d6_num.gltf")
             die.die_setup(self.base.render, self.base.loader)
             self.dice.append(die)
         self.startRun()
@@ -158,7 +158,7 @@ class DiceTest:
         return task.cont
 
     def display_face_up(self):
-        face_value = sum(self.up_face(die.np) for die in self.dice)
+        face_value = sum(self.get_face(die) for die in self.dice)
         self.text = OnscreenText(text=f"Total Value: {face_value}", pos=(-0.5,0.02),scale=0.07)
 
     def still_dice(self, die_node):
@@ -176,25 +176,8 @@ class DiceTest:
         if self.text is not None:
             self.text.destroy()
         
-
-    def up_face(self, die_np):        
-        faces = {1:(Vec3(0,0,1),Vec3(0,0,1)), 
-                 6:(Vec3(0,0,-1),Vec3(0,0,1)),
-                 2:(Vec3(0,0,-1),Vec3(1,0,0)),
-                 5:(Vec3(0,0,1),Vec3(1,0,0)),
-                 3:(Vec3(0,0,-1),Vec3(0,1,0)),
-                 4:(Vec3(0,0,1),Vec3(0,1,0)),
-                 }       
-        high = 0
-        face = 0
-        for x, y in faces.items():
-            face_vector = self.worldNP.get_relative_vector(die_np, y[1])
-            value = y[0].dot(face_vector)
-            if (value > high):
-                high = value
-                face = x
-        return face
-
+    def get_face(self, die):
+        return die.get_face_value(self.worldNP)
 
     def make_wall(self, shape_vector : Vec3, name, x, y, z):
         shape = BulletPlaneShape(shape_vector, 1)
