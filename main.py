@@ -49,9 +49,16 @@ class DiceTest:
         self.base.setFrameRateMeter(True)
         self.slider = DirectSlider(range=(0,20), value=10, 
                 pageSize=1, command=self.showValue, 
-                pos = (-1.4, 0, 0), scale=0.25,
+                pos = (-1.4, 0, 0.2), scale=0.25,
                 frameColor=(255,255,255,255))
         self.label = DirectLabel(text="10", 
+                pos = (-1.7, 0, 0.2), scale=0.25,
+                text_scale=0.25)
+        self.slider2 = DirectSlider(range=(0,20), value=10, 
+                pageSize=1, command=self.showValue2, 
+                pos = (-1.4, 0, 0), scale=0.25,
+                frameColor=(255,255,255,255))
+        self.label2 = DirectLabel(text="10", 
                 pos = (-1.7, 0, 0), scale=0.25,
                 text_scale=0.25)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
@@ -93,7 +100,10 @@ class DiceTest:
         self.clear_text()
         self.dice = []
         for _i in range(int(floor(self.slider['value']))):
-            #die = D6("models/dice/d6_num.gltf")
+            die = D6("models/dice/d6_num.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
+        for _i in range(int(floor(self.slider2['value']))):
             die = D20("models/dice/d20.gltf")
             die.die_setup(self.base.render, self.base.loader)
             self.dice.append(die)
@@ -204,7 +214,9 @@ class DiceTest:
 
     def showValue(self):
         self.label['text'] = str(int(floor(self.slider['value'])))
-        print(self.slider['value'])
+
+    def showValue2(self):
+        self.label2['text'] = str(int(floor(self.slider2['value'])))
 
 
 
