@@ -16,6 +16,7 @@ import random
 import sys
 from math import floor
 from Dice.D6 import D6
+from Dice.D20 import D20
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
@@ -92,7 +93,8 @@ class DiceTest:
         self.clear_text()
         self.dice = []
         for _i in range(int(floor(self.slider['value']))):
-            die = D6("models/dice/d6_num.gltf")
+            #die = D6("models/dice/d6_num.gltf")
+            die = D20("models/dice/d20.gltf")
             die.die_setup(self.base.render, self.base.loader)
             self.dice.append(die)
         self.startRun()
@@ -164,8 +166,8 @@ class DiceTest:
     def still_dice(self, die_node):
         ang = die_node.getAngularVelocity()
         lin = die_node.getLinearVelocity()
-        comp_1 = ang.compareTo(Vec3(0,0,0),0.05)
-        comp_2 = lin.compareTo(Vec3(0,0,0),0.05)
+        comp_1 = ang.compareTo(Vec3(0,0,0),0.5) #0.05 for d6
+        comp_2 = lin.compareTo(Vec3(0,0,0),0.5) #0.05 for d6
         if comp_1 != 0 or comp_2 != 0:
             return False
         die_node.setAngularVelocity(Vec3(0,0,0))
