@@ -3,12 +3,6 @@
 		"generator":"Khronos glTF Blender I/O v4.2.70",
 		"version":"2.0"
 	},
-	"extensionsUsed":[
-		"KHR_texture_transform"
-	],
-	"extensionsRequired":[
-		"KHR_texture_transform"
-	],
 	"scene":0,
 	"scenes":[
 		{
@@ -32,18 +26,9 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"Material.001",
+			"name":"Material",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"extensions":{
-						"KHR_texture_transform":{
-							"offset":[
-								0.999999999999999,
-								1.00000004371139
-							],
-							"rotation":-1.5707963705062866
-						}
-					},
 					"index":0
 				},
 				"metallicFactor":0,
@@ -76,69 +61,69 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"D20_Flat_texture",
-			"uri":"D20_Flat_texture.png"
+			"name":"d8_texture_map",
+			"uri":"d8_texture_map.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":60,
+			"count":24,
 			"max":[
-				0.8506507873535156,
-				0.8506507873535156,
-				0.8506507873535156
+				1,
+				1,
+				1
 			],
 			"min":[
-				-0.8506507873535156,
-				-0.8506507873535156,
-				-0.8506507873535156
+				-1,
+				-1,
+				-1
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":60,
+			"count":24,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":60,
+			"count":24,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":60,
+			"count":24,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":720,
+			"byteLength":288,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":720,
-			"byteOffset":720,
+			"byteLength":288,
+			"byteOffset":288,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":480,
-			"byteOffset":1440,
+			"byteLength":192,
+			"byteOffset":576,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":120,
-			"byteOffset":1920,
+			"byteLength":48,
+			"byteOffset":768,
 			"target":34963
 		}
 	],
@@ -150,8 +135,8 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2040,
-			"uri":"d20.bin"
+			"byteLength":816,
+			"uri":"d8.bin"
 		}
 	]
 }

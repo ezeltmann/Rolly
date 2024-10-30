@@ -2,20 +2,22 @@
 
 """
 TODO:
-1. Split up methods into smaller calls
-    A. __init__
-    B.startrun()
+1. Add d10
+2. Add d4
+3. Add d100
+4. Add d12
+5. Rolling Interface
+6. Label the sliders for what type of dice
+7. Check Dice Numbers to be sure
 
-2. Start adding multiple dice
-3. Start adding a board for rolling
-4. Start adding an inverface for calling methods
-5. Split classes into multiple files
+
 """
 
 import random
 import sys
 from math import floor
 from Dice.D6 import D6
+from Dice.D8 import D8
 from Dice.D20 import D20
 
 from direct.showbase.ShowBase import ShowBase
@@ -44,21 +46,28 @@ class DiceTest:
     def __init__(self):
         self.base = ShowBase()
         self.base.disable_mouse()
-        self.base.camera.setPos(0, -50, 40)
+        self.base.camera.setPos(0, -10, 80)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
         self.slider = DirectSlider(range=(0,20), value=10, 
                 pageSize=1, command=self.showValue, 
-                pos = (-1.4, 0, 0.2), scale=0.25,
+                pos = (-1.4, 0, 0.4), scale=0.25,
                 frameColor=(255,255,255,255))
         self.label = DirectLabel(text="10", 
-                pos = (-1.7, 0, 0.2), scale=0.25,
+                pos = (-1.7, 0, 0.4), scale=0.25,
                 text_scale=0.25)
         self.slider2 = DirectSlider(range=(0,20), value=10, 
                 pageSize=1, command=self.showValue2, 
-                pos = (-1.4, 0, 0), scale=0.25,
+                pos = (-1.4, 0, 0.2), scale=0.25,
                 frameColor=(255,255,255,255))
         self.label2 = DirectLabel(text="10", 
+                pos = (-1.7, 0, 0.2), scale=0.25,
+                text_scale=0.25)
+        self.slider3 = DirectSlider(range=(0,20), value=10, 
+                pageSize=1, command=self.showValue3, 
+                pos = (-1.4, 0, 0), scale=0.25,
+                frameColor=(255,255,255,255))
+        self.label3 = DirectLabel(text="10", 
                 pos = (-1.7, 0, 0), scale=0.25,
                 text_scale=0.25)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
@@ -105,6 +114,10 @@ class DiceTest:
             self.dice.append(die)
         for _i in range(int(floor(self.slider2['value']))):
             die = D20("models/dice/d20.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
+        for _i in range(int(floor(self.slider3['value']))):
+            die = D8("models/dice/d8.gltf")
             die.die_setup(self.base.render, self.base.loader)
             self.dice.append(die)
         self.startRun()
@@ -217,6 +230,9 @@ class DiceTest:
 
     def showValue2(self):
         self.label2['text'] = str(int(floor(self.slider2['value'])))
+
+    def showValue3(self):
+        self.label3['text'] = str(int(floor(self.slider3['value'])))
 
 
 
