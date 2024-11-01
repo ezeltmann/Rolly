@@ -49,6 +49,8 @@ class DiceTest:
         self.base.camera.setPos(0, -10, 80)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
+        self.sliders = []
+        self.labels = []
         self.slider = DirectSlider(range=(0,20), value=10, 
                 pageSize=1, command=self.showValue, 
                 pos = (-1.4, 0, 0.4), scale=0.25,
