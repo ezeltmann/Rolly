@@ -1,3 +1,5 @@
+import re
+
 test_string_1 = "1d6"
 test_string_2 = "2d8"
 test_string_3 = "1d20 + 5"
@@ -37,6 +39,10 @@ class Mod_Test(Die_Test):
     def __str__(self):
         return self.type + ' Value: ' + str(self.value)
 
+def use_regex(input_text):
+    pattern = re.compile(r"[0-9]+d[0-9]+", re.IGNORECASE)
+    return pattern.match(input_text)
+
 set = []
 set.append(D6_Test())
 set.append(D8_Test())
@@ -46,4 +52,6 @@ set.append(Mod_Test(4))
 for x in set:
     print(x)
 
-
+roll = use_regex(test_string_1).string
+print(roll)
+parts = roll.lower().split('d')
