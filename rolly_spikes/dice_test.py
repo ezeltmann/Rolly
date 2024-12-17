@@ -55,3 +55,17 @@ for x in set:
 roll = use_regex(test_string_1).string
 print(roll)
 parts = roll.lower().split('d')
+print(parts)
+
+dice_list = []
+for d in range(0,int(parts[0])):
+    if parts[1] == '6':
+        dice_list.append(D6_Test)
+    elif parts[1]== '8':
+        dice_list.append(D8_Test)
+    elif parts[1] == '20':
+        dice_list.append(D20_Test)
+
+
+for x in dice_list:
+    print(x)
