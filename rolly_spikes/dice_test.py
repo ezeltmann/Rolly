@@ -1,7 +1,11 @@
 import re
 
-test_string_1 = "1d6"
-test_string_2 = "2d8"
+test_string_1_0 = "1d6"
+test_string_1_1 = "1d8"
+test_string_1_2 = "1d20"
+test_string_2_1 = "2d6"
+test_string_2_1 = "2d8"
+test_string_2_2 = "2d20"
 test_string_3 = "1d20 + 5"
 test_string_4 = "1d20 - 5"
 test_string_5 = "1d6 + 1d20"
@@ -41,31 +45,26 @@ class Mod_Test(Die_Test):
 
 def use_regex(input_text):
     pattern = re.compile(r"[0-9]+d[0-9]+", re.IGNORECASE)
-    return pattern.match(input_text)
+    return pattern.match(input_text).string
 
-set = []
-set.append(D6_Test())
-set.append(D8_Test())
-set.append(D20_Test())
-set.append(Mod_Test(4))
+def get_dice_list(input_string):
+    roll = use_regex(input_string)
+    (count, d_type) = roll.lower().split('d')
+    dice_list = []
+    for d in range(0,int(count)):
+        if d_type == '6':
+            dice_list.append(D6_Test())
+        elif d_type == '8':
+            dice_list.append(D8_Test())
+        elif d_type == '20':
+            dice_list.append(D20_Test())
+    return dice_list
 
-for x in set:
-    print(x)
-
-roll = use_regex(test_string_1).string
-print(roll)
-parts = roll.lower().split('d')
-print(parts)
+def print_dice_list(dice_list):
+    for x in dice_list:
+        print(x)
 
 dice_list = []
-for d in range(0,int(parts[0])):
-    if parts[1] == '6':
-        dice_list.append(D6_Test)
-    elif parts[1]== '8':
-        dice_list.append(D8_Test)
-    elif parts[1] == '20':
-        dice_list.append(D20_Test)
-
-
-for x in dice_list:
-    print(x)
+dice_list = get_dice_list(test_string_1_0)
+print("We should get something that matches: " + test_string_1_0)
+print_dice_list(dice_list)
