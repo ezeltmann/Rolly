@@ -3,7 +3,7 @@ import re
 test_string_1_0 = "1d6"
 test_string_1_1 = "1d8"
 test_string_1_2 = "1d20"
-test_string_2_1 = "2d6"
+test_string_2_0 = "2d6"
 test_string_2_1 = "2d8"
 test_string_2_2 = "2d20"
 test_string_3 = "1d20 + 5"
@@ -64,7 +64,19 @@ def print_dice_list(dice_list):
     for x in dice_list:
         print(x)
 
-dice_list = []
-dice_list = get_dice_list(test_string_1_0)
-print("We should get something that matches: " + test_string_1_0)
-print_dice_list(dice_list)
+
+def die_tester(input_string):
+    dice_list = []
+    dice_list = get_dice_list(input_string)
+    print("We should get something like: " + input_string)
+    print_dice_list(dice_list)
+
+die_tester(test_string_1_0)
+die_tester(test_string_1_1)
+die_tester(test_string_1_2)
+die_tester(test_string_2_0)
+die_tester(test_string_2_1)
+die_tester(test_string_2_2)
+#die_tester(test_string_3)
+#die_tester(test_string_4)
+#die_tester(test_string_5)
