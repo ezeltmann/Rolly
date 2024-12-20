@@ -28,7 +28,7 @@ from direct.gui.DirectGui import DirectLabel
 from direct.gui.DirectGui import DirectButton
 
 from panda3d.core import load_prc_file
-from panda3d.core import Vec3
+#from panda3d.core import Vec3
 from panda3d.core import BitMask32
 
 from panda3d.bullet import BulletWorld
