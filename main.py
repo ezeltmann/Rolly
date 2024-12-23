@@ -24,8 +24,6 @@ from Dice.parser import get_dice_list
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.gui.OnscreenText import OnscreenText
-from direct.gui.DirectGui import DirectSlider
-from direct.gui.DirectGui import DirectLabel
 from direct.gui.DirectGui import DirectButton
 from direct.gui.DirectGui import DirectEntry
 
@@ -51,35 +49,14 @@ class DiceTest:
         self.base.camera.setPos(0, -10, 80)
         self.base.camera.lookAt(0, 0, 3)
         self.base.setFrameRateMeter(True)
-        self.sliders = []
-        self.labels = []
-        self.slider = DirectSlider(range=(0,20), value=10, 
-                pageSize=1, command=self.showValue, 
-                pos = (-1.4, 0, 0.4), scale=0.25,
-                frameColor=(255,255,255,255))
-        self.label = DirectLabel(text="10", 
-                pos = (-1.7, 0, 0.4), scale=0.25,
-                text_scale=0.25)
-        self.slider2 = DirectSlider(range=(0,20), value=10, 
-                pageSize=1, command=self.showValue2, 
-                pos = (-1.4, 0, 0.2), scale=0.25,
-                frameColor=(255,255,255,255))
-        self.label2 = DirectLabel(text="10", 
-                pos = (-1.7, 0, 0.2), scale=0.25,
-                text_scale=0.25)
-        self.slider3 = DirectSlider(range=(0,20), value=10, 
-                pageSize=1, command=self.showValue3, 
-                pos = (-1.4, 0, 0), scale=0.25,
-                frameColor=(255,255,255,255))
-        self.label3 = DirectLabel(text="10", 
-                pos = (-1.7, 0, 0), scale=0.25,
-                text_scale=0.25)
+
+
         self.text_entry = DirectEntry(text = "", scale=0.1, 
                                       initialText="", numLines=1, focus=1,
-                                      pos = (-1.7, 0, -0.4),
+                                      pos = (-1.7, 0, 0.2),
                                       width = 5)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
-                pos = (-1.5, 0, -0.2), scale=0.25,
+                pos = (-1.5, 0, 0), scale=0.25,
                 text_scale=0.25)
         self.text = None
         self.entry_value = ""
@@ -106,7 +83,7 @@ class DiceTest:
         self.base.accept("f1", self.startRun)
         self.base.accept("f2", self.display_face_up)
         self.base.accept("f3", self.clear_text)
-
+        self.base.accept("enter",self.roll_dice) 
         # Startup
         #self.startRun()
 
@@ -228,14 +205,7 @@ class DiceTest:
         self.stopRun()
         sys.exit()
 
-    def showValue(self):
-        self.label['text'] = str(int(floor(self.slider['value'])))
 
-    def showValue2(self):
-        self.label2['text'] = str(int(floor(self.slider2['value'])))
-
-    def showValue3(self):
-        self.label3['text'] = str(int(floor(self.slider3['value'])))
 
 
 
