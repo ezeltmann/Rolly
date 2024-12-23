@@ -19,6 +19,7 @@ from math import floor
 from Dice.D6 import D6
 from Dice.D8 import D8
 from Dice.D20 import D20
+from Dice.parser import get_dice_list
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
@@ -26,9 +27,10 @@ from direct.gui.OnscreenText import OnscreenText
 from direct.gui.DirectGui import DirectSlider
 from direct.gui.DirectGui import DirectLabel
 from direct.gui.DirectGui import DirectButton
+from direct.gui.DirectGui import DirectEntry
 
 from panda3d.core import load_prc_file
-#from panda3d.core import Vec3
+from panda3d.core import Vec3
 from panda3d.core import BitMask32
 
 from panda3d.bullet import BulletWorld
@@ -72,10 +74,15 @@ class DiceTest:
         self.label3 = DirectLabel(text="10", 
                 pos = (-1.7, 0, 0), scale=0.25,
                 text_scale=0.25)
+        self.text_entry = DirectEntry(text = "", scale=0.1, 
+                                      initialText="", numLines=1, focus=1,
+                                      pos = (-1.7, 0, -0.4),
+                                      width = 5)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
                 pos = (-1.5, 0, -0.2), scale=0.25,
                 text_scale=0.25)
         self.text = None
+        self.entry_value = ""
         self.dice = []
         simplepbr.init()
 
@@ -103,25 +110,19 @@ class DiceTest:
         # Startup
         #self.startRun()
 
+    def enter_value(self, textEntered):
+        self.entry_value = textEntered
+
     def roll_dice(self):
+        
         if (len(self.dice) > 0):
             for die in self.dice:
                 self.world.remove(die.node)
                 die.np.removeNode()
         self.clear_text()
         self.dice = []
-        for _i in range(int(floor(self.slider['value']))):
-            die = D6("models/dice/d6_num.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
-        for _i in range(int(floor(self.slider2['value']))):
-            die = D20("models/dice/d20.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
-        for _i in range(int(floor(self.slider3['value']))):
-            die = D8("models/dice/d8.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
+        self.dice = get_dice_list(self.text_entry.get(), self.base)
+        #self.dice = get_dice_list("1d6", self.base)
         self.startRun()
 
     def setup_debug(self, debug_level: bool):
@@ -243,3 +244,20 @@ load_prc_file("myConfig.prc")
 
 app = DiceTest()
 app.base.run()
+
+
+
+"""
+        for _i in range(int(floor(self.slider['value']))):
+            die = D6("models/dice/d6_num.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
+        for _i in range(int(floor(self.slider2['value']))):
+            die = D20("models/dice/d20.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
+        for _i in range(int(floor(self.slider3['value']))):
+            die = D8("models/dice/d8.gltf")
+            die.die_setup(self.base.render, self.base.loader)
+            self.dice.append(die)
+"""

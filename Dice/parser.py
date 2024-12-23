@@ -1,13 +1,8 @@
 import re
-import D6
-import D8
-import D20
-import Modifier
-
-
-
-
-
+from Dice.D6 import D6
+from Dice.D8 import D8
+from Dice.D20 import D20
+from Dice.Modifier import Modifier
 
 
 
@@ -31,7 +26,7 @@ def split_multiple(input_string):
     results.append(input_string[start:])
     return results
 
-def get_dice_list(input_string):
+def get_dice_list(input_string, base):
     input_string = input_string.replace(" ","")
     items = split_multiple(input_string)
     dice_list = []
@@ -44,18 +39,23 @@ def get_dice_list(input_string):
         if (roll is not None):
             (count, d_type) = roll.string.lower().split('d')
             for d in range(0,int(count)):
+                die = None
                 if d_type == '6':
-                    dice_list.append(D6())
+                    die = D6("models/dice/d6_num.gltf")
                 elif d_type == '8':
-                    dice_list.append(D8())
+                    die = D8("models/dice/d8.gltf")
                 elif d_type == '20':
-                    dice_list.append(D20())
+                    die = D20("models/dice/d20.gltf")
+                die.die_setup(base.render, base.loader)
+                dice_list.append(die)
+
         else:
-            value = int(item)
-            if (negative):
-                value = value*-1
-            result = Modifier()
-            result.value = value
-            dice_list.append(result)
+            if not (item == ""):
+                value = int(item)
+                if (negative):
+                    value = value*-1
+                result = Modifier()
+                result.value = value
+                dice_list.append(result)
 
     return dice_list
