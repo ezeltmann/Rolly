@@ -214,20 +214,3 @@ load_prc_file("myConfig.prc")
 
 app = DiceTest()
 app.base.run()
-
-
-
-"""
-        for _i in range(int(floor(self.slider['value']))):
-            die = D6("models/dice/d6_num.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
-        for _i in range(int(floor(self.slider2['value']))):
-            die = D20("models/dice/d20.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
-        for _i in range(int(floor(self.slider3['value']))):
-            die = D8("models/dice/d8.gltf")
-            die.die_setup(self.base.render, self.base.loader)
-            self.dice.append(die)
-"""
