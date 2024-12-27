@@ -36,6 +36,8 @@ def get_dice_list(input_string, base):
         negative = item.startswith("-")
         item = item.replace("+","")
         item = item.replace("-","")
+        if (item.startswith('d') or item.startswith('D')):
+            item = "1"+item
         roll = use_regex(item)
         if (roll is not None):
             (count, d_type) = roll.string.lower().split('d')
