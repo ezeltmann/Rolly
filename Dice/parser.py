@@ -1,6 +1,7 @@
 import re
 from Dice.D6 import D6
 from Dice.D8 import D8
+from Dice.D12 import D12
 from Dice.D20 import D20
 from Dice.Modifier import Modifier
 
@@ -44,6 +45,8 @@ def get_dice_list(input_string, base):
                     die = D6("models/dice/d6_num.gltf")
                 elif d_type == '8':
                     die = D8("models/dice/d8.gltf")
+                elif d_type == '12':
+                    die = D12("models/dice/d12.gltf")
                 elif d_type == '20':
                     die = D20("models/dice/d20.gltf")
                 die.die_setup(base.render, base.loader)
