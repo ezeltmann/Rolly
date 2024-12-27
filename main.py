@@ -2,23 +2,16 @@
 
 """
 TODO:
-1. Add d10
-2. Add d4
-3. Add d100
-4. Add d12
-5. Rolling Interface
-6. Label the sliders for what type of dice
-7. Check Dice Numbers to be sure
-
-
+* Add d10
+* Add d4
+* Add d100
+* Fix issue if no number before d#
+* Fix issue about not having enough space for long roll commands
 """
 
 import random
 import sys
-from math import floor
-from Dice.D6 import D6
-from Dice.D8 import D8
-from Dice.D20 import D20
+from Dice.Modifier import Modifier
 from Dice.parser import get_dice_list
 
 from direct.showbase.ShowBase import ShowBase
@@ -94,8 +87,9 @@ class DiceTest:
         
         if (len(self.dice) > 0):
             for die in self.dice:
-                self.world.remove(die.node)
-                die.np.removeNode()
+                if (not isinstance(die,Modifier)):
+                    self.world.remove(die.node)
+                    die.np.removeNode()
         self.clear_text()
         self.dice = []
         self.dice = get_dice_list(self.text_entry.get(), self.base)
@@ -122,21 +116,23 @@ class DiceTest:
 
     def randomize_die_location(self):
         for die in self.dice:
-            rand_x = random.randrange(-10, 10)
-            rand_y = random.randrange(-10, 10)
-            rand_z = random.randrange(10,20)
-            die.np.setPos(rand_x, rand_y, rand_z)
+            if (not isinstance(die,Modifier)):
+                rand_x = random.randrange(-10, 10)
+                rand_y = random.randrange(-10, 10)
+                rand_z = random.randrange(10,20)
+                die.np.setPos(rand_x, rand_y, rand_z)
     
     def randomize_die_movement(self):    
         for die in self.dice:
-            die.node.setMass(1.0)
-            rand_x = random.randrange(-10, 10)
-            rand_y = random.randrange(-10, 10)
-            rand_ax = random.randrange(-10, 10)
-            rand_ay = random.randrange(-10, 10)
-            rand_az = random.randrange(-10, 10)
-            die.node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
-            die.node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
+            if (not isinstance(die,Modifier)):
+                die.node.setMass(1.0)
+                rand_x = random.randrange(-10, 10)
+                rand_y = random.randrange(-10, 10)
+                rand_ax = random.randrange(-10, 10)
+                rand_ay = random.randrange(-10, 10)
+                rand_az = random.randrange(-10, 10)
+                die.node.setLinearVelocity(Vec3(rand_x, rand_y, 0))
+                die.node.setAngularVelocity(Vec3(rand_ax, rand_ay, rand_az))
 
 
     def startRun(self):
@@ -144,7 +140,8 @@ class DiceTest:
         self.randomize_die_movement()
 
         for die in self.dice:
-            self.world.attach(die.node)
+            if (not isinstance(die,Modifier)):
+                self.world.attach(die.node)
 
         if self.base.taskMgr.hasTaskNamed("updateRun"):
             self.base.taskMgr.remove("updateRun")
@@ -156,7 +153,8 @@ class DiceTest:
         #Check if the die has gone still       
         dice_still = True
         for die in self.dice:
-            dice_still = self.still_dice(die.node) and dice_still
+            if (not isinstance(die,Modifier)):
+                dice_still = self.still_dice(die.node) and dice_still
         if (dice_still):
             self.base.taskMgr.remove("updateRun")
             self.display_face_up()

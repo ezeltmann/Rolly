@@ -59,6 +59,7 @@ def get_dice_list(input_string, base):
                     value = value*-1
                 result = Modifier()
                 result.value = value
+                result.die_setup(base.render, base.loader)
                 dice_list.append(result)
 
     return dice_list
