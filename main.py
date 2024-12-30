@@ -2,8 +2,12 @@
 
 """
 TODO:
+* Add d2
+* Add d3 - D6 with double sides
 * Add d4
-* Fix issue about not having enough space for long roll commands
+* Add Saved Rolls
+* Simplify the Dice
+* Die Rolling Tray Look?
 """
 
 import random
@@ -42,8 +46,8 @@ class DiceTest:
 
 
         self.text_entry = DirectEntry(text = "", scale=0.1, 
-                                      initialText="", numLines=1, focus=1,
-                                      pos = (-1.7, 0, 0.2),
+                                      initialText="", numLines=4, focus=1,
+                                      pos = (-1.7, 0, 0.45),
                                       width = 5)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
                 pos = (-1.5, 0, 0), scale=0.25,
