@@ -2,10 +2,7 @@
 
 """
 TODO:
-* Add d10
 * Add d4
-* Add d100
-* Fix issue if no number before d#
 * Fix issue about not having enough space for long roll commands
 """
 
