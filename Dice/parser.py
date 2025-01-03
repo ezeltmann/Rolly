@@ -1,4 +1,5 @@
 import re
+from Dice.D4 import D4
 from Dice.D6 import D6
 from Dice.D8 import D8
 from Dice.D10 import D10
@@ -43,9 +44,13 @@ def get_dice_list(input_string, base):
         roll = use_regex(item)
         if (roll is not None):
             (count, d_type) = roll.string.lower().split('d')
+            if int(count) > 100:
+                count = '100'
             for d in range(0,int(count)):
                 die = None
-                if d_type == '6':
+                if d_type == '4':
+                    die = D4("models/dice/d4.gltf")
+                elif d_type == '6':
                     die = D6("models/dice/d6_num.gltf")
                 elif d_type == '8':
                     die = D8("models/dice/d8.gltf")

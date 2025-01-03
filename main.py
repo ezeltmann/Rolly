@@ -4,7 +4,6 @@
 TODO:
 * Add d2
 * Add d3 - D6 with double sides
-* Add d4
 * Add Saved Rolls
 * Simplify the Dice
 * Die Rolling Tray Look?
