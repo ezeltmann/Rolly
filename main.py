@@ -6,7 +6,6 @@ TODO:
 * Add d3 - D6 with double sides
 * Add Saved Rolls
 * Simplify the Dice
-* Die Rolling Tray Look?
 """
 
 import random
@@ -23,6 +22,7 @@ from direct.gui.DirectGui import DirectEntry
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
 from panda3d.core import BitMask32
+from panda3d.core import CardMaker
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletRigidBodyNode
@@ -52,9 +52,14 @@ class DiceTest:
                 pos = (-1.5, 0, 0), scale=0.25,
                 text_scale=0.25)
         self.text = None
+        self.imageObject = None
         self.entry_value = ""
         self.dice = []
         simplepbr.init()
+        self.x = 0
+        self.y = 0
+        self.z = 0
+        
 
         self.setup_debug(False)
 
@@ -198,11 +203,32 @@ class DiceTest:
         self.world.attach(self.make_wall(Vec3(25,0,0),"Left Wall", -20, 0, -2))
         self.world.attach(self.make_wall(Vec3(0,-25,0),"Up Wall", 0, 20, -2))
         self.world.attach(self.make_wall(Vec3(0,25,0),"Down Wall", 0, -20, -2))
+        cm = CardMaker('Background')
+        self.card = self.base.render.attachNewNode(cm.generate())
+        tex = self.base.loader.loadTexture('models/blender/background.png')
+        self.card.setTexture(tex)
+        self.card.setScale(40.0)
+        self.card.setPosHpr(Vec3(-20,-20,-2),Vec3(270,270,270))
 
     def exitGame(self):
         self.stopRun()
         sys.exit()
 
+"""
+    def move_bg_test(self):
+        if self.base.taskMgr.hasTaskNamed("updateBg"):
+            self.base.taskMgr.remove("updateBg")
+        self.base.taskMgr.add(self.update_bg, "updateBg")
+
+    def update_bg(self, task):
+        dt = globalClock.getDt()
+        self.x = self.x + 1
+        self.y = self.y + 1
+        self.z = self.z + 1
+        self.card.setPosHpr(Vec3(0,-5,50),Vec3(self.x,self.y,self.z))
+        self.world.do_physics(dt)
+        return task.cont
+"""
 
 
 
@@ -211,4 +237,8 @@ load_prc_file("myConfig.prc")
 
 
 app = DiceTest()
+#app.move_bg_test()
 app.base.run()
+
+
+
