@@ -3,6 +3,7 @@ from panda3d.bullet import BulletTriangleMesh
 from panda3d.bullet import BulletTriangleMeshShape
 from panda3d.core import BitMask32
 from panda3d.core import Vec3
+from math import floor
 
 
 class Die():
@@ -53,7 +54,7 @@ class Die():
             value = Vec3(0,0,1).dot(face_vector)
             if (value > high):
                 high = value
-                face = x
+                face = floor(x)
         return face
 
     def die_setup(self, render, loader):
