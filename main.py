@@ -3,7 +3,6 @@
 """
 TODO:
 * Add d2
-* Add d3 - D6 with double sides
 * Add Saved Rolls
 * Simplify the Dice
 """
