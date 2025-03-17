@@ -2,9 +2,9 @@
 
 """
 TODO:
-* Add d2
 * Add Saved Rolls
 * Simplify the Dice
+* Reorginize window
 """
 
 import random

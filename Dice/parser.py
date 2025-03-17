@@ -1,4 +1,5 @@
 import re
+from Dice.D2 import D2
 from Dice.D3 import D3
 from Dice.D4 import D4
 from Dice.D6 import D6
@@ -49,7 +50,9 @@ def get_dice_list(input_string, base):
                 count = '100'
             for d in range(0,int(count)):
                 die = None
-                if d_type =='3':
+                if d_type == '2':
+                    die = D2("models/dice/d2.gltf")
+                elif d_type == '3':
                     die = D3("models/dice/d3.gltf")
                 elif d_type == '4':
                     die = D4("models/dice/d4.gltf")
