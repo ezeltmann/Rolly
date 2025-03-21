@@ -45,11 +45,21 @@ class DiceTest:
 
         self.text_entry = DirectEntry(text = "", scale=0.1, 
                                       initialText="", numLines=4, focus=1,
-                                      pos = (-1.7, 0, 0.45),
+                                      pos = (-1.45, 0, 0.45),
                                       width = 5)
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
-                pos = (-1.5, 0, 0), scale=0.25,
+                pos = (-1.2, 0, 0), scale=0.25,
                 text_scale=0.25)
+        
+        temp_btn_dict = {
+                "Monopoly":"2d6",
+                "Initative":"1d20+4",
+                "To Hit":"1d20+7",
+                "Great Sword":"2d6+5",
+                "Great Axe":"1d12+5"}
+
+        self.populate_roll_buttons(temp_btn_dict)
+
         self.text = None
         self.imageObject = None
         self.entry_value = ""
@@ -87,8 +97,31 @@ class DiceTest:
     def enter_value(self, textEntered):
         self.entry_value = textEntered
 
+    def populate_roll_buttons(self, button_dict):
+        self.sav_btns = []
+        pos = 0.55
+
+        for btn_name, roll in button_dict.items():
+            button = DirectButton(text=btn_name, command=self.roll_saved_dice, 
+                                        extraArgs=[roll],
+                                        pos = (1.2, 0, pos), scale=0.25,
+                                        text_scale=0.25)
+            pos -= 0.15
+            self.sav_btns.append(button)
+
+    def roll_saved_dice(self, roll):
+        if (len(self.dice) > 0):
+            for die in self.dice:
+                if (not isinstance(die,Modifier)):
+                    self.world.remove(die.node)
+                    die.np.removeNode()
+        self.clear_text()
+        self.dice = []
+        self.dice = get_dice_list(roll, self.base)
+        #self.dice = get_dice_list("1d6", self.base)
+        self.startRun()
+
     def roll_dice(self):
-        
         if (len(self.dice) > 0):
             for die in self.dice:
                 if (not isinstance(die,Modifier)):
