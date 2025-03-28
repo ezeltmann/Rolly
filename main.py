@@ -2,7 +2,6 @@
 
 """
 TODO:
-* Add Saved Rolls
 * Simplify the Dice
 * Reorginize window
 """
@@ -16,23 +15,16 @@ from Dice.parser import get_dice_list
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.gui.OnscreenText import OnscreenText
-from direct.gui.DirectGui import DirectFrame
 from direct.gui.DirectGui import DirectButton
 from direct.gui.DirectGui import DirectEntry
-from direct.gui.DirectGui import DirectDialog
 from direct.gui.DirectGui import YesNoDialog
 
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
 from panda3d.core import BitMask32
 from panda3d.core import CardMaker
-from panda3d.core import TextNode
-from panda3d.core import (
-    LPoint3f,
-    LVecBase3f,
-    LVecBase4f,
-    TextNode
-)
+from panda3d.core import LPoint3f
+from panda3d.core import LVecBase3f
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletRigidBodyNode
@@ -123,18 +115,12 @@ class DiceTest:
         self.sav_btns = []
         self.del_btns = []
         trash_can = self.base.loader.loadTexture("icon/trash_can_icon.png")
-        #trash_img = OnscreenImage(image="icon/trash_can_icon.png",scale=(0.2,0.2,0.2))
-        #trash_img.setTransparency(TransparencyAttrib.MAlpha)
-        #trash_img.ignore()
         pos = 0.7
         pos_trash = 0.715
-        #self.button_frame = DirectFrame(frameSize=(-0.333,0.333,-1.5,1),                                         
-        #                                pos=LPoint3f(-0.275,0,-1.3), parent=self.base.a2dpTopRight)
         for btn_name, roll in button_dict.items():
             button = DirectButton(text=btn_name, command=self.roll_saved_dice, 
                                         extraArgs=[roll], pos=LPoint3f(1.1,0,pos),
                                         scale=LVecBase3f(0.085,0.085,0.085))
-            #image_scale=(0.15,0.15,0.15)
             del_btn = DirectButton(image=trash_can, command=self.delete_saved_roll,
                                         pos=LPoint3f(1.425,0,pos_trash), image_scale=LVecBase3f(0.5,0.5,0.5), 
                                         scale=LVecBase3f(0.09,0.09,0.09), extraArgs=[btn_name])
@@ -183,7 +169,6 @@ class DiceTest:
         self.clear_text()
         self.dice = []
         self.dice = get_dice_list(roll, self.base)
-        #self.dice = get_dice_list("1d6", self.base)
         self.startRun()
 
     def roll_dice(self):
@@ -195,7 +180,6 @@ class DiceTest:
         self.clear_text()
         self.dice = []
         self.dice = get_dice_list(self.text_entry.get(), self.base)
-        #self.dice = get_dice_list("1d6", self.base)
         self.startRun()
 
     def setup_debug(self, debug_level: bool):
@@ -311,30 +295,10 @@ class DiceTest:
         self.stopRun()
         sys.exit()
 
-"""
-    def move_bg_test(self):
-        if self.base.taskMgr.hasTaskNamed("updateBg"):
-            self.base.taskMgr.remove("updateBg")
-        self.base.taskMgr.add(self.update_bg, "updateBg")
-
-    def update_bg(self, task):
-        dt = globalClock.getDt()
-        self.x = self.x + 1
-        self.y = self.y + 1
-        self.z = self.z + 1
-        self.card.setPosHpr(Vec3(0,-5,50),Vec3(self.x,self.y,self.z))
-        self.world.do_physics(dt)
-        return task.cont
-"""
-
-
-
-
 load_prc_file("myConfig.prc")
 
 
 app = DiceTest()
-#app.move_bg_test()
 app.base.run()
 
 
