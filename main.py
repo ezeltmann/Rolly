@@ -9,19 +9,30 @@ TODO:
 
 import random
 import sys
+import json
 from Dice.Modifier import Modifier
 from Dice.parser import get_dice_list
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.ShowBaseGlobal import globalClock
 from direct.gui.OnscreenText import OnscreenText
+from direct.gui.DirectGui import DirectFrame
 from direct.gui.DirectGui import DirectButton
 from direct.gui.DirectGui import DirectEntry
+from direct.gui.DirectGui import DirectDialog
+from direct.gui.DirectGui import YesNoDialog
 
 from panda3d.core import load_prc_file
 from panda3d.core import Vec3
 from panda3d.core import BitMask32
 from panda3d.core import CardMaker
+from panda3d.core import TextNode
+from panda3d.core import (
+    LPoint3f,
+    LVecBase3f,
+    LVecBase4f,
+    TextNode
+)
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletRigidBodyNode
@@ -50,15 +61,14 @@ class DiceTest:
         self.button = DirectButton(text="Roll!", command=self.roll_dice,
                 pos = (-1.2, 0, 0), scale=0.25,
                 text_scale=0.25)
-        
-        temp_btn_dict = {
-                "Monopoly":"2d6",
-                "Initative":"1d20+4",
-                "To Hit":"1d20+7",
-                "Great Sword":"2d6+5",
-                "Great Axe":"1d12+5"}
-
-        self.populate_roll_buttons(temp_btn_dict)
+        self.name_entry = DirectEntry(text = "", scale=0.1, 
+                                      initialText="", numLines=1,
+                                      pos = (-1.45, 0, -0.45),
+                                      width = 5)
+        self.button = DirectButton(text="Save Roll", command=self.save_roll,
+                                   pos=(-1.2,0,-0.6), scale=0.25, text_scale=0.25)
+        self.rolls = self.load_saved_rolls()
+        self.populate_roll_buttons(self.rolls)
 
         self.text = None
         self.imageObject = None
@@ -97,17 +107,69 @@ class DiceTest:
     def enter_value(self, textEntered):
         self.entry_value = textEntered
 
+    def save_saved_rolls(self, rolls):
+        with open("saved_rolls.json", mode="w", encoding="utf-8") as write_file:
+            json.dump(rolls, write_file)
+
+    def load_saved_rolls(self):
+        rolls = None
+        with open("saved_rolls.json", mode="r", encoding="utf-8") as read_file:
+            rolls = json.load(read_file)
+        
+        return rolls
+
     def populate_roll_buttons(self, button_dict):
         self.sav_btns = []
-        pos = 0.55
-
+        self.del_btns = []
+        trash_can = self.base.loader.loadTexture("icon/trash_can_icon.png")
+        #trash_img = OnscreenImage(image="icon/trash_can_icon.png",scale=(0.2,0.2,0.2))
+        #trash_img.setTransparency(TransparencyAttrib.MAlpha)
+        #trash_img.ignore()
+        pos = 0.7
+        #self.button_frame = DirectFrame(frameSize=(-0.333,0.333,-1.5,1),                                         
+        #                                pos=LPoint3f(-0.275,0,-1.3), parent=self.base.a2dpTopRight)
         for btn_name, roll in button_dict.items():
             button = DirectButton(text=btn_name, command=self.roll_saved_dice, 
-                                        extraArgs=[roll],
-                                        pos = (1.2, 0, pos), scale=0.25,
-                                        text_scale=0.25)
-            pos -= 0.15
+                                        extraArgs=[roll], pos=LPoint3f(1.2,0,pos),
+                                        scale=LVecBase3f(0.1,0.1,0.1))
+            #image_scale=(0.15,0.15,0.15)
+            del_btn = DirectButton(image=trash_can, command=self.delete_saved_roll,
+                                        pos=LPoint3f(1.45,0,pos), image_scale=LVecBase3f(0.5,0.5,0.5), 
+                                        scale=LVecBase3f(0.1,0.1,0.1), extraArgs=[btn_name])
+            del_btn.setTransparency(True)
             self.sav_btns.append(button)
+            self.del_btns.append(del_btn)
+            pos -= 0.2
+
+
+
+    def delete_saved_roll(self, btn_name):
+        text = f"Are you sure you want to delete\n the roll named {btn_name}"
+        self.del_conf_dialog = YesNoDialog(dialogName="YesNoDialog", text=text,
+                             command=self.delete_roll, extraArgs=[btn_name])
+
+    def delete_roll(self, answer, btn_name):
+        #roll        
+        self.del_conf_dialog.cleanup()
+        if (answer == 1):
+            del self.rolls[btn_name]
+            self.clear_saved_roll_buttons()
+            self.populate_roll_buttons(self.rolls)
+
+    def save_roll(self):
+        roll = self.text_entry.get()
+        name = self.name_entry.get()
+        self.rolls[name] = roll
+        self.clear_saved_roll_buttons()
+        self.populate_roll_buttons(self.rolls)
+
+    def clear_saved_roll_buttons(self):
+        for btn in self.sav_btns:
+                btn.destroy()
+        for btn in self.del_btns:
+                btn.destroy()
+        self.sav_btns = []
+        self.del_btns = []
 
     def roll_saved_dice(self, roll):
         if (len(self.dice) > 0):
@@ -244,6 +306,7 @@ class DiceTest:
 
     def exitGame(self):
         self.stopRun()
+        self.save_saved_rolls(self.rolls)
         sys.exit()
 
 """
