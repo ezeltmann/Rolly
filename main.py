@@ -119,6 +119,7 @@ class DiceTest:
         return rolls
 
     def populate_roll_buttons(self, button_dict):
+        self.save_saved_rolls(self.rolls)
         self.sav_btns = []
         self.del_btns = []
         trash_can = self.base.loader.loadTexture("icon/trash_can_icon.png")
@@ -126,20 +127,22 @@ class DiceTest:
         #trash_img.setTransparency(TransparencyAttrib.MAlpha)
         #trash_img.ignore()
         pos = 0.7
+        pos_trash = 0.715
         #self.button_frame = DirectFrame(frameSize=(-0.333,0.333,-1.5,1),                                         
         #                                pos=LPoint3f(-0.275,0,-1.3), parent=self.base.a2dpTopRight)
         for btn_name, roll in button_dict.items():
             button = DirectButton(text=btn_name, command=self.roll_saved_dice, 
-                                        extraArgs=[roll], pos=LPoint3f(1.2,0,pos),
-                                        scale=LVecBase3f(0.1,0.1,0.1))
+                                        extraArgs=[roll], pos=LPoint3f(1.1,0,pos),
+                                        scale=LVecBase3f(0.085,0.085,0.085))
             #image_scale=(0.15,0.15,0.15)
             del_btn = DirectButton(image=trash_can, command=self.delete_saved_roll,
-                                        pos=LPoint3f(1.45,0,pos), image_scale=LVecBase3f(0.5,0.5,0.5), 
-                                        scale=LVecBase3f(0.1,0.1,0.1), extraArgs=[btn_name])
+                                        pos=LPoint3f(1.425,0,pos_trash), image_scale=LVecBase3f(0.5,0.5,0.5), 
+                                        scale=LVecBase3f(0.09,0.09,0.09), extraArgs=[btn_name])
             del_btn.setTransparency(True)
             self.sav_btns.append(button)
             self.del_btns.append(del_btn)
             pos -= 0.2
+            pos_trash -= 0.2
 
 
 
@@ -306,7 +309,6 @@ class DiceTest:
 
     def exitGame(self):
         self.stopRun()
-        self.save_saved_rolls(self.rolls)
         sys.exit()
 
 """
