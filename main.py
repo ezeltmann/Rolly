@@ -4,6 +4,9 @@
 TODO:
 * Simplify the Dice
 * Reorginize window
+* Advantage
+* Disadvantage
+* Help Menu
 """
 
 import random

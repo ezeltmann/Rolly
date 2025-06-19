@@ -13,7 +13,7 @@ from Dice.Modifier import Modifier
 
 
 def use_regex(input_text):
-    pattern = re.compile(r"[0-9]+d[0-9]+", re.IGNORECASE)
+    pattern = re.compile(r"[0-9]+(d|a|s)[0-9]+", re.IGNORECASE)
     return pattern.match(input_text)
 
 def find(s, ch1, ch2):
@@ -41,35 +41,111 @@ def get_dice_list(input_string, base):
         negative = item.startswith("-")
         item = item.replace("+","")
         item = item.replace("-","")
+        if (item.startswith('a') or item.startswith('A')):
+            item = "1"+item
+        if (item.startswith('s') or item.startswith('S')):
+            item = "1"+item
         if (item.startswith('d') or item.startswith('D')):
             item = "1"+item
-        roll = use_regex(item)
+        roll = use_regex(item)       
         if (roll is not None):
-            (count, d_type) = roll.string.lower().split('d')
-            if int(count) > 100:
-                count = '100'
-            for d in range(0,int(count)):
-                die = None
+            if 's' in roll.string.lower():
+                (count, d_type) = roll.string.lower().split('s')
+                count = 1
+                die = []
                 if d_type == '2':
-                    die = D2("models/dice/d2.gltf")
+                    die.append(D2("models/dice/d2.gltf"))
+                    die.append(D2("models/dice/d2.gltf"))
                 elif d_type == '3':
-                    die = D3("models/dice/d3.gltf")
+                    die.append(D3("models/dice/d3.gltf"))
+                    die.append(D3("models/dice/d3.gltf"))
                 elif d_type == '4':
-                    die = D4("models/dice/d4.gltf")
+                    die.append(D4("models/dice/d4.gltf"))
+                    die.append(D4("models/dice/d4.gltf"))
                 elif d_type == '6':
-                    die = D6("models/dice/d6_num.gltf")
+                    die.append(D6("models/dice/d6_num.gltf"))
+                    die.append(D6("models/dice/d6_num.gltf"))
                 elif d_type == '8':
-                    die = D8("models/dice/d8.gltf")
+                    die.append(D8("models/dice/d8.gltf"))
+                    die.append(D8("models/dice/d8.gltf"))
                 elif d_type == '10':
-                    die = D10("models/dice/d10.gltf")
+                    die.append(D10("models/dice/d10.gltf"))
+                    die.append(D10("models/dice/d10.gltf"))
                 elif d_type == '12':
-                    die = D12("models/dice/d12.gltf")
+                    die.append(D12("models/dice/d12.gltf"))
+                    die.append(D12("models/dice/d12.gltf"))
                 elif d_type == '20':
-                    die = D20("models/dice/d20.gltf")
+                    die.append(D20("models/dice/d20.gltf"))
+                    die.append(D20("models/dice/d20.gltf"))
                 elif d_type == '100':
-                    die = D100("models/dice/d100.gltf")
-                die.die_setup(base.render, base.loader)
-                dice_list.append(die)
+                    die.append(D100("models/dice/d100.gltf"))
+                    die.append(D100("models/dice/d100.gltf"))
+                for d in die:
+                    d.die_setup(base.render, base.loader)
+                    dice_list.append(d)
+
+            elif 'a' in roll.string.lower():
+                (count, d_type) = roll.string.lower().split('a')
+                count = 1
+                die = []
+                if d_type == '2':
+                    die.append(D2("models/dice/d2.gltf"))
+                    die.append(D2("models/dice/d2.gltf"))
+                elif d_type == '3':
+                    die.append(D3("models/dice/d3.gltf"))
+                    die.append(D3("models/dice/d3.gltf"))
+                elif d_type == '4':
+                    die.append(D4("models/dice/d4.gltf"))
+                    die.append(D4("models/dice/d4.gltf"))
+                elif d_type == '6':
+                    die.append(D6("models/dice/d6_num.gltf"))
+                    die.append(D6("models/dice/d6_num.gltf"))
+                elif d_type == '8':
+                    die.append(D8("models/dice/d8.gltf"))
+                    die.append(D8("models/dice/d8.gltf"))
+                elif d_type == '10':
+                    die.append(D10("models/dice/d10.gltf"))
+                    die.append(D10("models/dice/d10.gltf"))
+                elif d_type == '12':
+                    die.append(D12("models/dice/d12.gltf"))
+                    die.append(D12("models/dice/d12.gltf"))
+                elif d_type == '20':
+                    die.append(D20("models/dice/d20.gltf"))
+                    die.append(D20("models/dice/d20.gltf"))
+                elif d_type == '100':
+                    die.append(D100("models/dice/d100.gltf"))
+                    die.append(D100("models/dice/d100.gltf"))
+                for d in die:
+                    d.die_setup(base.render, base.loader)
+                    dice_list.append(d)
+                
+            elif 'd' in roll.string.lower():    
+                (count, d_type) = roll.string.lower().split('d')
+                if int(count) > 100:
+                    count = '100'
+                for d in range(0,int(count)):
+                    die = []
+                    if d_type == '2':
+                        die.append(D2("models/dice/d2.gltf"))
+                    elif d_type == '3':
+                        die.append(D3("models/dice/d3.gltf"))
+                    elif d_type == '4':
+                        die.append(D4("models/dice/d4.gltf"))
+                    elif d_type == '6':
+                        die.append(D6("models/dice/d6_num.gltf"))
+                    elif d_type == '8':
+                        die.append(D8("models/dice/d8.gltf"))
+                    elif d_type == '10':
+                        die.append(D10("models/dice/d10.gltf"))
+                    elif d_type == '12':
+                        die.append(D12("models/dice/d12.gltf"))
+                    elif d_type == '20':
+                        die.append(D20("models/dice/d20.gltf"))
+                    elif d_type == '100':
+                        die.append(D100("models/dice/d100.gltf"))
+                    for d in die:
+                        d.die_setup(base.render, base.loader)
+                        dice_list.append(d)
 
         else:
             if not (item == ""):
